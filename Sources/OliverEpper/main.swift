@@ -1,12 +1,22 @@
 import Foundation
 import Publish
 import Plot
+import SwiftPygmentsPublishPlugin
+import DarkImagePublishPlugin
 
 // This type acts as the configuration for your website.
 struct OliverEpper: Website {
+    static let dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .long
+        formatter.timeStyle = .none
+        return formatter
+    }()
+
     enum SectionID: String, WebsiteSectionID {
         // Add the sections that you want your website to contain here:
         case posts
+        case about
     }
 
     struct ItemMetadata: WebsiteItemMetadata {
@@ -14,12 +24,20 @@ struct OliverEpper: Website {
     }
 
     // Update these properties to configure your website:
-    var url = URL(string: "https://your-website-url.com")!
-    var name = "OliverEpper"
-    var description = "A description of OliverEpper"
+    var url = URL(string: "https://oliverepper.github.io")!
+    var name = "oliep"
+    var description = "Golf Professional & Professional Software Developer"
     var language: Language { .english }
     var imagePath: Path? { nil }
 }
 
 // This will generate your website using the built-in Foundation theme:
-try OliverEpper().publish(withTheme: .foundation)
+try OliverEpper().publish(using: [
+    .installPlugin(.pygments()),
+    .installPlugin(.darkImage()),
+    .copyResources(),
+    .addMarkdownFiles(),
+    .generateHTML(withTheme: .oliep),
+    .generateRSSFeed(including: [.posts]),
+    .generateSiteMap()
+])
