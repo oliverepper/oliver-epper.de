@@ -17,11 +17,6 @@ footer {
     padding: 1rem;
 }
 
-/*header a, main a {*/
-/*    text-decoration: none;*/
-/*    color: black;*/
-/*}*/
-
 a {
     text-decoration: none;
     color: black;
@@ -183,12 +178,30 @@ article figure img {
 article pre code .highlight {
     overflow-x: auto;
     padding: 1rem;
-    border-radius: 1rem;
+    border-radius: .5rem;
 }
 
 article a, .page a, .credits a {
     text-decoration: underline;
 }
+
+/* Tag List */
+.tag-list ul {
+    display: flex;
+    flex-wrap: wrap;
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+.tag-list ul li {
+/*    margin-bottom: 1.2rem;*/
+}
+
+.tag-list ul li a {
+    padding: 0 0.3rem;
+}
+
 
 /* Typographie */
 h1 {

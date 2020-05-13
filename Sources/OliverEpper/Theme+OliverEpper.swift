@@ -101,7 +101,33 @@ extension Theme where Site == OliverEpper {
         }
 
         func makeTagListHTML(for page: TagListPage, context: PublishingContext<OliverEpper>) throws -> HTML? {
-            nil
+            HTML(
+                .lang(context.site.language),
+                .head(for: page, on: context.site),
+                .body(
+                    .layout(for: context, selectedSection: nil,
+                        .h1(
+                            .text("Tags")
+                        ),
+                        .div(.class("tag-list"),
+                            .ul(
+                                .forEach(page.tags.sorted()) { tag in
+                                    .li(
+                                        .a(
+                                            .href(context.site.path(for: tag)),
+                                            .text("\(tag.string) (\(context.items(taggedWith: tag).count))")
+                                        ),
+                                        .if(tag != page.tags.sorted().last,
+                                            .text("&middot;")
+                                        )
+                                    )
+                                }
+                            )
+                        )
+                    )
+                )
+            )
+
         }
 
         func makeTagDetailsHTML(for page: TagDetailsPage, context: PublishingContext<OliverEpper>) throws -> HTML? {
@@ -110,7 +136,11 @@ extension Theme where Site == OliverEpper {
                 .head(for: page, on: context.site),
                 .body(
                     .layout(for: context, selectedSection: nil,
-                            .text("Taglist still missing")
+                        .h1(
+                            "Tagged with ",
+                            .text(page.tag.string)
+                        ),
+                        .itemList(for: context.items(taggedWith: page.tag, sortedBy: \.date), onSite: context.site)
                     )
                 )
             )
@@ -180,12 +210,12 @@ private extension Node where Context == HTML.BodyContext {
                         .href("https://github.com/luizdepra/hugo-coder"),
                         .text("Coder"),
                         .target(.blank)
+                    ),
+                    .text(" &middot; "),
+                    .a(
+                        .href("/feed.rss"),
+                        .text("RSS feed")
                     )
-//                    .text(" &middot; "),
-//                    .a(
-//                        .href("/feed.rss"),
-//                        .text("RSS feed")
-//                    )
                 )
             )
         )
