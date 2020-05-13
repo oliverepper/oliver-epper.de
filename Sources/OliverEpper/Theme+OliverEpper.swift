@@ -165,6 +165,13 @@ private extension Node where Context == HTML.BodyContext {
                         .target(.blank)
                     ),
                     .text(" &middot; "),
+                    .text(" inspired by "),
+                    .a(
+                        .href("https://github.com/luizdepra/hugo-coder"),
+                        .text("Coder"),
+                        .target(.blank)
+                    ),
+                    .text(" &middot; "),
                     .a(
                         .text("RSS feed"),
                         .href("/feed.rss")
@@ -175,18 +182,22 @@ private extension Node where Context == HTML.BodyContext {
     }
 
     static func itemList<T: Website>(for items: [Item<T>], onSite: T) -> Node {
-        return .ul(
-            .forEach(items) { item in
-                .li(
-                    .span(.class("date"),
-                        .text(OliverEpper.dateFormatter.string(from: item.date))
-                    ),
-                    .a(
-                        .href(item.path),
-                        .text(item.title)
-                    )
+        return .div(.class("item-list"),
+            .if(items.count > 0,
+                .ul(
+                    .forEach(items) { item in
+                        .li(
+                            .span(.class("date"),
+                                .text(OliverEpper.dateFormatter.string(from: item.date))
+                            ),
+                            .a(
+                                .href(item.path),
+                                .text(item.title)
+                            )
+                        )
+                    }
                 )
-            }
+            )
         )
     }
 }

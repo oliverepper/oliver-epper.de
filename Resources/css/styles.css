@@ -17,7 +17,7 @@ footer {
     padding: 1rem;
 }
 
-header a, .main a {
+header a, main a {
     text-decoration: none;
     color: black;
 }
@@ -109,6 +109,18 @@ header a, .main a {
 
 .credits {
     text-align: center;
+}
+
+/* Item List */
+.item-list ul {
+    list-style: none;
+}
+
+.item-list ul li .date {
+    display: inline-block;
+    width: 8rem;
+    text-align: right;
+    margin-right: 1rem;
 }
 
 /* Articles */
