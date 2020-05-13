@@ -10,7 +10,8 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/johnsundell/publish.git", from: "0.3.0"),
         .package(url: "https://github.com/Ze0nC/SwiftPygmentsPublishPlugin", .branch("master")),
-        .package(url: "https://github.com/insidegui/DarkImagePublishPlugin", .branch("master"))
+        .package(url: "https://github.com/insidegui/DarkImagePublishPlugin", .branch("master")),
+        .package(url: "https://github.com/alexito4/ReadingTimePublishPlugin", .branch("master"))
     ],
     targets: [
         .target(
@@ -18,7 +19,8 @@ let package = Package(
             dependencies: [
                 "Publish",
                 "SwiftPygmentsPublishPlugin",
-                "DarkImagePublishPlugin"]
+                "DarkImagePublishPlugin",
+                "ReadingTimePublishPlugin"]
         )
     ]
 )

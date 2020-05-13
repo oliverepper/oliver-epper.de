@@ -124,6 +124,37 @@ header a, main a {
 }
 
 /* Articles */
+article .item-metadata > ul {
+    list-style: none;
+    display: flex;
+    padding-left: 0;
+    margin: 0;
+}
+
+article .item-metadata > ul li svg {
+    padding-right: 0.3rem;
+}
+
+article .item-metadata > ul li {
+    padding-right: 0.3rem;
+}
+
+article .item-metadata .taglist {
+    display: flex;
+    align-items: center;
+}
+
+article .item-metadata .taglist > ul {
+    list-style: none;
+    display: flex;
+    padding-left: 0;
+    margin: 0;
+}
+
+article .item-metadata .taglist a {
+    padding: 0.3rem;
+}
+
 article figure {
     display: flex;
     justify-content: center;

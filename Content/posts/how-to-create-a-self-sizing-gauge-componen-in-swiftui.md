@@ -1,9 +1,9 @@
 ---
 date: 2020-05-08 9:41
+title: How to create a self sizing gauge component in SwiftUI
 description: How to create a self-sizing-gauge-component-in-swiftui
 tags: Swift, iOS, SwiftUI, HowTo
 ---
-# How to create a self sizing gauge component in SwiftUI
 
 SwiftUI is really great and building custom UI is actually pretty straight forward. Let's use _function builders_ and _preference keys_ to build a component that looks like this:
 

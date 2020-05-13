@@ -1,9 +1,9 @@
 ---
 date: 2020-02-20 9:41
+title: How to use CoreData inside xcframework
 description:  Use CoreData inside xcframework
 tags: Swift, iOS, CoreData, xcframework
 ---
-# How to use CoreData inside xcframework
 
 The company I work for distributes a binary framework that records data on an iPhone. Since I am in charge of that framework and I enjoy working with CoreData I wanted to use it to store the collected data.
 Sadly my first attempt of doing this resulted in an error when I tried to use the framework inside an actual app.

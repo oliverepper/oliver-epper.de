@@ -73,6 +73,8 @@ extension Theme where Site == OliverEpper {
                 .body(
                     .layout(for: context, selectedSection: item.sectionID,
                         .article(
+                            .h1(.text(item.title)),
+                            .itemMetaData(for: item, onSite: context.site),
                             .contentBody(item.body)
                         )
                     ),
@@ -199,5 +201,44 @@ private extension Node where Context == HTML.BodyContext {
                 )
             )
         )
+    }
+
+    static func itemMetaData<T: Website>(for item: Item<T>, onSite site: T) -> Node {
+        let readingTime = Int(item.readingTime.minutes)
+
+        return .div(.class("item-metadata"),
+            .ul(
+                .li(
+                    .span(.class("fas fa-calendar")),
+                    .text(OliverEpper.dateFormatter.string(from: item.date))
+                ),
+                .li(
+                    .span(.class("fas fa-clock")),
+                    .text("\(readingTime)-minute read")
+                )
+            ),
+            .if(item.tags.count > 0,
+                .div(.class("taglist"),
+                    .span(.class("fas fa-tags")),
+                    .forEach(item.tags) { tag in
+                        .group(
+                            .a(
+                                .href(site.path(for: tag)),
+                                .text(tag.string)
+                            ),
+                            .if(tag != item.tags.last,
+                                .text("&middot;")
+                            )
+                        )
+                    }
+                )
+            )
+        )
+
+
+////                    .a(
+////                        .href(site.path(for: tag)),
+////                        .text(tag.string)
+////                    ),
     }
 }

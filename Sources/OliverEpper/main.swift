@@ -3,6 +3,7 @@ import Publish
 import Plot
 import SwiftPygmentsPublishPlugin
 import DarkImagePublishPlugin
+import ReadingTimePublishPlugin
 
 // This type acts as the configuration for your website.
 struct OliverEpper: Website {
@@ -37,6 +38,7 @@ try OliverEpper().publish(using: [
     .installPlugin(.darkImage()),
     .copyResources(),
     .addMarkdownFiles(),
+    .installPlugin(.readingTime()),
     .generateHTML(withTheme: .oliep),
     .generateRSSFeed(including: [.posts]),
     .generateSiteMap()
