@@ -105,7 +105,15 @@ extension Theme where Site == OliverEpper {
         }
 
         func makeTagDetailsHTML(for page: TagDetailsPage, context: PublishingContext<OliverEpper>) throws -> HTML? {
-            nil
+            HTML(
+                .lang(context.site.language),
+                .head(for: page, on: context.site),
+                .body(
+                    .layout(for: context, selectedSection: nil,
+                            .text("Taglist still missing")
+                    )
+                )
+            )
         }
     }
 }
@@ -172,12 +180,12 @@ private extension Node where Context == HTML.BodyContext {
                         .href("https://github.com/luizdepra/hugo-coder"),
                         .text("Coder"),
                         .target(.blank)
-                    ),
-                    .text(" &middot; "),
-                    .a(
-                        .text("RSS feed"),
-                        .href("/feed.rss")
                     )
+//                    .text(" &middot; "),
+//                    .a(
+//                        .href("/feed.rss"),
+//                        .text("RSS feed")
+//                    )
                 )
             )
         )
@@ -234,11 +242,5 @@ private extension Node where Context == HTML.BodyContext {
                 )
             )
         )
-
-
-////                    .a(
-////                        .href(site.path(for: tag)),
-////                        .text(tag.string)
-////                    ),
     }
 }

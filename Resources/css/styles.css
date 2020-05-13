@@ -17,7 +17,12 @@ footer {
     padding: 1rem;
 }
 
-header a, main a {
+/*header a, main a {*/
+/*    text-decoration: none;*/
+/*    color: black;*/
+/*}*/
+
+a {
     text-decoration: none;
     color: black;
 }
@@ -123,6 +128,17 @@ header a, main a {
     margin-right: 1rem;
 }
 
+.item-list ul li a {
+    font-weight: bold;
+}
+
+@media only screen and (max-width: 768px) {
+    .item-list ul li .date {
+        text-align: left;
+        display: block;
+    }
+}
+
 /* Articles */
 article .item-metadata > ul {
     list-style: none;
@@ -170,7 +186,7 @@ article pre code .highlight {
     border-radius: 1rem;
 }
 
-article a, .page a {
+article a, .page a, .credits a {
     text-decoration: underline;
 }
 

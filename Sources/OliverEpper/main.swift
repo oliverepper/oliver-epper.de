@@ -41,5 +41,6 @@ try OliverEpper().publish(using: [
     .installPlugin(.readingTime()),
     .generateHTML(withTheme: .oliep),
     .generateRSSFeed(including: [.posts]),
-    .generateSiteMap()
+    .generateSiteMap(),
+    .deploy(using: .gitHub("oliverepper/oliverepper.github.io", useSSH: false))
 ])
