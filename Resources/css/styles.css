@@ -132,6 +132,10 @@ a {
         text-align: left;
         display: block;
     }
+
+    .item-list ul li {
+        margin-bottom: 1rem;
+    }
 }
 
 /* Articles */
