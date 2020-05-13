@@ -86,13 +86,16 @@ extension Theme where Site == OliverEpper {
 
         func makePageHTML(for page: Page, context: PublishingContext<OliverEpper>) throws -> HTML {
             HTML(
+                .lang(context.site.language),
+                .head(for: page, on: context.site),
                 .body(
-                    .p(
-                        .text("not yet implemented")
+                    .layout(for: context, selectedSection: nil,
+                        .div(.class("page"),
+                             .contentBody(page.body)
+                        )
                     )
                 )
             )
-
         }
 
         func makeTagListHTML(for page: TagListPage, context: PublishingContext<OliverEpper>) throws -> HTML? {
@@ -155,11 +158,16 @@ private extension Node where Context == HTML.BodyContext {
         return .footer(
             .container(
                 .div(.class("credits"),
-                    .text("Oliver Epper &middot; made with ❤️ and "),
+                    .text("Oliver Epper &middot; made with "),
                     .a(
                         .href("https://github.com/johnsundell/publish"),
                         .text("Publish"),
                         .target(.blank)
+                    ),
+                    .text(" &middot; "),
+                    .a(
+                        .text("RSS feed"),
+                        .href("/feed.rss")
                     )
                 )
             )

@@ -17,7 +17,7 @@ footer {
     padding: 1rem;
 }
 
-a {
+header a, .main a {
     text-decoration: none;
     color: black;
 }
@@ -127,7 +127,7 @@ article pre code .highlight {
     border-radius: 1rem;
 }
 
-article a {
+article a, .page a {
     text-decoration: underline;
 }
 
