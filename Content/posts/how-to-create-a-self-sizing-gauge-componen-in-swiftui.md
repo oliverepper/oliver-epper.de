@@ -1,7 +1,7 @@
 ---
 date: 2020-05-08 9:41
-title: How to create a self sizing gauge component in SwiftUI
-description: How to create a self-sizing-gauge-component-in-swiftui
+title: How to create a self-sizing gauge component in SwiftUI
+description: How to create a self-sizing gauge component in swiftui
 tags: Swift, iOS, SwiftUI, HowTo
 ---
 
@@ -32,7 +32,7 @@ Gauge(value: value) {
 
 The gauge will automatically adjust its size depending on the size of the center view.
 
-## How is this build?
+## How is this built?
 
 ```Swift
 import SwiftUI
@@ -128,13 +128,13 @@ Gauge(value: value) {
 ### Preference Key
 
 In SwiftUI preference keys provide the possibility for a child view to pass values up to it's ancestors. While `@Environment`-objects are visible to child views, `PreferenceKeys` are visible to parents.
-What we want to achieve is that the Gauge knows the width of it's `centerView` and adjusts the circles accordingly. So we add the `.background`-modifier to the `centerView` and fill it's background with a transparent color. We use the `GeometryReader`'s proxy to get the size of the invisible Color and save that in the `GaugeWidthPreferenceKey`.
+What we want to achieve is that the Gauge knows the width of it's `centerView` and adjusts the circles accordingly. So we add the `.background`-modifier to the `centerView` and fill its background with a transparent color. We use the `GeometryReader`'s proxy to get the size of the invisible Color and save that in the `GaugeWidthPreferenceKey`.
 
 Now we can use the `.onPreferenceChange`-modifier on the outer ZStack to calculate the diameter of our circles. Since diamater is a `@State`-property the body property of the Gauge will be evaluated and our circles are drawn with the desired diameter. Very cool!
 
 ### Providing a default center view
 
-There's one more thing required to make the Gauge work without the need to provide a centerView. We need an initializer takes only the value as an argument. This can be done with an extension of the Gauge using conditional conformance.
+There's one more thing required to make the Gauge work without the need to provide a centerView. We need an initializer that takes only the value as an argument. This can be done with an extension of the Gauge using conditional conformance.
 
 ### Why conformance to `ZStack<TupleView<(Text, Text)>>`?
-In order to prevent the Gauge to change it's size with every different value between 0 and 100 % I build a default centerView that has the invisible string "100 %" and centered on top of that the string representing the actual value. So the `centerView` will always have the same width.  
+In order to prevent the Gauge to change its size with every different value between 0 and 100 % I build a default centerView that has the invisible string "100 %" and centered on top of that the string representing the actual value. So the `centerView` will always have the same width.  
