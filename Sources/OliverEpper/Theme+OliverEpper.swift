@@ -175,11 +175,19 @@ private extension Node where Context == HTML.BodyContext {
                     .if(sectionsIDs.count > 1,
                         .ul(
                             .forEach(sectionsIDs) { section in
-                                .li(.a(
-                                    .class(section == selectedSection ? "selected" : ""),
-                                    .href(context.sections[section].path),
-                                    .text(context.sections[section].title)
-                                ))
+                                .group(
+                                    .li(.a(
+                                        .class(section == selectedSection ? "selected" : ""),
+                                        .href(context.sections[section].path),
+                                        .text(context.sections[section].title)
+                                        )),
+                                    .if(section as! OliverEpper.SectionID == OliverEpper.SectionID.posts,
+                                        .li(.a(
+                                            .href("https://golf.oliver-epper.de"),
+                                            .text("Golf")
+                                        ))
+                                    )
+                                )
                             }
                         )
                     )
