@@ -25,7 +25,7 @@ struct OliverEpper: Website {
     }
 
     // Update these properties to configure your website:
-    var url = URL(string: "https://oliverepper.github.io")!
+    var url = URL(string: "https://oliver-epper.de")!
     var name = "oliep"
     var description = "Golf Professional & Professional Software Developer"
     var language: Language { .english }
