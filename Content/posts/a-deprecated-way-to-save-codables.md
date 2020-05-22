@@ -3,6 +3,8 @@ date: 2020-02-21 9:41
 title: A deprecated way to save Codables – but why?
 description: Saving one Codable a time directly to a file handle.
 tags: Swift, iOS, Codables
+typora-copy-images-to: ../../Resources/images
+typora-root-url: ../../Resources
 ---
 
 I was looking for a way to save a lot of Codables that emerge over a potentially long timespan. Just keeping them in memory looked like the obvious thing to do but I wanted something failsafe and persistent.

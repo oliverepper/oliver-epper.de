@@ -3,6 +3,8 @@ date: 2020-02-20 9:41
 title: How to use CoreData inside xcframework
 description:  Use CoreData inside xcframework
 tags: Swift, iOS, CoreData, xcframework
+typora-copy-images-to: ../../Resources/images
+typora-root-url: ../../Resources
 ---
 
 The company I work for distributes a binary framework that records data on an iPhone. Since I am in charge of that framework and I enjoy working with CoreData I wanted to use it to store the collected data.

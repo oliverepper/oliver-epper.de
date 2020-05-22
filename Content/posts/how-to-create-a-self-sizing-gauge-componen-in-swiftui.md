@@ -3,6 +3,8 @@ date: 2020-05-08 9:41
 title: How to create a self-sizing gauge component in SwiftUI
 description: How to create a self-sizing gauge component in swiftui
 tags: Swift, iOS, SwiftUI, HowTo
+typora-copy-images-to: ../../Resources/images
+typora-root-url: ../../Resources
 ---
 
 SwiftUI is really great and building custom UI is actually pretty straight forward. Let's use _function builders_ and _preference keys_ to build a component that looks like this:
@@ -11,6 +13,7 @@ SwiftUI is really great and building custom UI is actually pretty straight forwa
 
 The gauge features a center view that the user can either provide or the gauge will automatically show a text presenting it's value.
 So once we have our gauge component ready it can be used like this:
+
 ```Swift
 // Simplest use possible, the Gauge will construct a centerView that shows: '\(value) %'.
 // To prevent constant resizings when passing in other values the centerView width is calculated
