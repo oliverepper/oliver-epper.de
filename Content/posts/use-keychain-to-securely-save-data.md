@@ -115,5 +115,80 @@ static func load() -> String? {
 
 The function `SecItemCopyMatching(_ query: CFDictionary, _ result: UnsafeMutablePointer<CFTypeRef?>?) -> OSStatus` copies an Item into its second parameter if the item matches the query dictionary passed in the first parameter. The query dictionary is configured to return only one item and return it as `Data`. This is configured with the keys `kSecMatchLimit` and `kSecReturnData`. If the operations succeeded you can cast the result object to data and build the String you originally saved from it.
 
-So after looking into this I would suggest you simply use [SwiftKeyChainWrapper](https://github.com/jrendel/SwiftKeychainWrapper) like everyone else suggests 😃
+So after looking into this I would suggest you simply use [SwiftKeychainWrapper](https://github.com/jrendel/SwiftKeychainWrapper) like everyone else suggests 😃
+
+## Update: A stripped down version of SwiftKeychainWrapper (only Strings)
+
+```Swift
+import Foundation
+
+// This is a stripped down version of SwiftKeychainWraper
+// https://github.com/jrendel/SwiftKeychainWrapper
+class KeychainWrapper {
+    static let standard = KeychainWrapper()
+
+    private init() {}
+
+    func string(forKey key: String) -> String? {
+        guard let keychainData = data(forKey: key) else {
+            return nil
+        }
+
+        return String(data: keychainData, encoding: .utf8)
+    }
+
+    func set(_ value: String, forKey key: String) {
+        if let data = value.data(using: .utf8) {
+            set(data, forKey: key)
+        }
+    }
+
+    func removeObject(forKey key: String) {
+        let keychainQueryDictionary = setupKeychainQueryDictionary(forKey: key)
+        SecItemDelete(keychainQueryDictionary as CFDictionary)
+    }
+
+    private func data(forKey key: String) -> Data? {
+        var keychainQueryDictionary = setupKeychainQueryDictionary(forKey: key)
+        keychainQueryDictionary[kSecMatchLimit as String] = kSecMatchLimitOne
+        keychainQueryDictionary[kSecReturnData as String] = kCFBooleanTrue
+
+        var result: AnyObject?
+        let status = SecItemCopyMatching(keychainQueryDictionary as CFDictionary, &result)
+
+        return status == noErr ? result as? Data : nil
+    }
+
+    private func set(_ data: Data, forKey key: String) {
+        var keychainQuerDictionary = setupKeychainQueryDictionary(forKey: key)
+        keychainQuerDictionary[kSecValueData as String] = data
+
+        let status = SecItemAdd(keychainQuerDictionary as CFDictionary, nil)
+
+        if status == errSecDuplicateItem {
+            update(data, forKey: key)
+        }
+    }
+
+    private func update(_ data: Data, forKey key: String) {
+        let keychainQueryDictionary = setupKeychainQueryDictionary(forKey: key)
+        let updateDictionary = [kSecValueData:data]
+
+        SecItemUpdate(keychainQueryDictionary as CFDictionary, updateDictionary as CFDictionary)
+    }
+
+    private func setupKeychainQueryDictionary(forKey key: String) -> [String:Any] {
+        var keychainQueryDictionary: [String:Any] = [kSecClass as String:kSecClassGenericPassword]
+        keychainQueryDictionary[kSecAttrService as String] = Bundle.main.bundleIdentifier!
+
+        if let encodedKey = key.data(using: .utf8) {
+            keychainQueryDictionary[kSecAttrAccount as String] = encodedKey
+        }
+
+        return keychainQueryDictionary
+    }
+}
+```
+
+
 
