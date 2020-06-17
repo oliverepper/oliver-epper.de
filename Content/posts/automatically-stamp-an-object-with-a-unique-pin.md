@@ -94,7 +94,7 @@ create:
 		save_model
 
 getNextSticker:
-	return get sicker_from_db.if_ok
+	return get sticker_from_db.if_ok
 		delete_sticker_from_db.if_ok
 			return sticker
 ```
@@ -153,4 +153,4 @@ getNextSticker:
 			return sticker
 ```
 
-The pins table is a prepopulated table that has two columns. One for the actual pin and one called selector that is prepoulated with NULL. The `getNextPin` function writes a uuid that it saves in the selector column and can then read a pin by selecting the row with the matching selector. Pretty neat, isn't it?
+The pins table is a prepopulated table that has two columns. One for the actual pin and one called selector that is prepopulated with NULL. The `getNextPin` function writes a uuid that it saves in the selector column and can then read a pin by selecting the row with the matching selector. Pretty neat, isn't it?
