@@ -153,4 +153,18 @@ getNextSticker:
 			return sticker
 ```
 
-The pins table is a prepopulated table that has two columns. One for the actual pin and one called selector that is prepopulated with NULL. The `getNextPin` function writes a uuid that it saves in the selector column and can then read a pin by selecting the row with the matching selector. Pretty neat, isn't it?
+The pins table is a prepopulated table that has two columns. One for the actual pin and one called selector that is prepopulated with NULL. The `getNextPin` function writes a uuid that it saves in the selector column and can then read a pin by selecting the row with the matching selector. Pretty neat, isn't it
+
+## Update
+
+When I test this under heavy load (> 100 creations/s) I still keep getting the same pins sometimes. While this is not a problem for my usecase I am still very interested in an even better solution. When I use `Date().timeIntervalSince1970` I get the same pins less frequently but I guess that's just because the operation might be slower than getting an UUID. Any ideas welcome!
+
+## Update 2
+
+Here's the fix 😎 With Postgres you can tell the database to skip a entry if it cannot attain a lock immediatley! That solves it:
+
+```plsql
+UPDATE pins SET selector='\(selector.uuidString)' WHERE pin = (SELECT pin FROM pins WHERE selector IS NULL LIMIT 1 FOR UPDATE SKIP LOCKED) RETURNING pin;
+```
+
+Oh! And as an added bonus object creation under heavy load get's around 30% quicker. ⚡️
