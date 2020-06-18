@@ -163,8 +163,28 @@ When I test this under heavy load (> 100 creations/s) I still keep getting the s
 
 Here's the fix 😎 With Postgres you can tell the database to skip a entry if it cannot attain a lock immediatley! That solves it:
 
-```plsql
-UPDATE pins SET selector='\(selector.uuidString)' WHERE pin = (SELECT pin FROM pins WHERE selector IS NULL LIMIT 1 FOR UPDATE SKIP LOCKED) RETURNING pin;
+```sql
+UPDATE pins SET selector=uuid_string WHERE pin = (SELECT pin FROM pins WHERE selector IS NULL LIMIT 1 FOR UPDATE SKIP LOCKED) RETURNING pin;
+```
+
+In code:
+
+```swift
+private func getNextPin(from db: Database) -> EventLoopFuture<Int> {
+        guard let sql = db as? SQLDatabase else {
+            fatalError()
+        }
+        let selector = UUID()
+        return sql.raw("UPDATE pins SET selector='\(selector.uuidString)' WHERE pin = (SELECT pin FROM pins WHERE selector IS NULL LIMIT 1 FOR UPDATE SKIP LOCKED) RETURNING pin").run().flatMap {
+            return sql.raw("SELECT pin FROM pins WHERE selector='\(selector.uuidString)'").first().flatMapThrowing { row in
+                if let pin = try? row?.decode(column: "pin", as: Int.self) {
+                    return pin
+                }
+                throw PinError()
+            }
+        }
+    }
 ```
 
 Oh! And as an added bonus object creation under heavy load get's around 30% quicker. ⚡️
+
