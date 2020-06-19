@@ -157,11 +157,11 @@ The pins table is a prepopulated table that has two columns. One for the actual 
 
 ## Update
 
-When I test this under heavy load (> 100 creations/s) I still keep getting the same pins sometimes. While this is not a problem for my usecase I am still very interested in an even better solution. When I use `Date().timeIntervalSince1970` I get the same pins less frequently but I guess that's just because the operation might be slower than getting an UUID. Any ideas welcome!
+When I test this under heavy load (> 100 creations/s) I still keep getting the same pins sometimes. While this is not a problem for my use case I am still very interested in an even better solution. When I use `Date().timeIntervalSince1970` I get the same pins less frequently but I guess that's just because the operation might be slower than getting an UUID. Any ideas welcome!
 
 ## Update 2
 
-Here's the fix 😎 With Postgres you can tell the database to skip a entry if it cannot attain a lock immediatley! That solves it:
+Here's the fix 😎 With Postgres you can tell the database to skip an entry if it cannot attain a lock immediatley! That solves it:
 
 ```sql
 UPDATE pins SET selector=uuid_string WHERE pin = (SELECT pin FROM pins WHERE selector IS NULL LIMIT 1 FOR UPDATE SKIP LOCKED) RETURNING pin;
