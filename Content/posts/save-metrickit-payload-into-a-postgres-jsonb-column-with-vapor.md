@@ -44,7 +44,7 @@ All this and more is nicely documented on [NSHipster – MetricKit](https://nshi
 
 ## Vapor
 
-So in Vapor we need a `/collect`-route that takes the payload. The easiest solution would be to build a struct take takes some (or all) of the information from the payload, but I wanted to do the same thing Matt did (in Ruby or JS) and just save the payload in a jsonb-column.
+So in Vapor we need a `/collect`-route that takes the payload. The easiest solution would be to build a struct that takes some (or all) of the information from the payload, but I wanted to do the same thing Matt did (in Ruby or JS) and just save the payload in a jsonb-column.
 
 With the help of the really great people in the Vapor-Discord (namely: TypeBeta) I was able to achieve what I wanted with the following model-class:s
 
