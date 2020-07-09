@@ -1,5 +1,5 @@
 ---
-date: 2020-06-17 9:41
+date: 2020-07-09 9:41
 title: MetricKit and Vapor
 description: Save MetricKit payload into a postgres jsonb column with vapor
 tags: Swift, Server, Vapor, Fluent
