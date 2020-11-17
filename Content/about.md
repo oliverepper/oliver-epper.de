@@ -3,10 +3,11 @@
 My name is **Oliver Epper** and I am a  developer.
 
 ## What I do at the moment
-Developing iOS frameworks and apps in [Swift](https://swift.org). Building backends in [Python](https://www.python.org) with [Flask](https://flask.palletsprojects.com).
+Developing iOS/macOS frameworks and apps in [Swift](https://swift.org).
 
 ## What I did in the past
 Building backend Software in Java. Running Linux and Unix Servers. Building VPNs.
+Building backends in [Python](https://www.python.org) with [Flask](https://flask.palletsprojects.com).
 
 ## What I also do
 Teach Golf.
