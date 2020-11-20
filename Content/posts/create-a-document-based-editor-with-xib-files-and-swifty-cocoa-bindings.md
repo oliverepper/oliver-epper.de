@@ -146,7 +146,7 @@ Create an outlet to the `NSTextView` in the `EditorViewController` and add the f
 textView.bind(.value, to: representedObject!, withKeyPath: "contentString", options: [NSBindingOption.continuouslyUpdatesValue: true])
 ```
 
-We're immediately back in business. Value is still bound to `contentString` and through the options dictionary we stil tell the `NSTextView` to send updates continuously. But Lucas had another cool idea:
+We're immediately back in business. Value is still bound to `contentString` and through the options dictionary we still tell the `NSTextView` to send updates continuously. But Lucas had another cool idea:
 
 Create the following extentions on `NSObject`:
 
