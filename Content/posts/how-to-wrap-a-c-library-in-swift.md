@@ -6,7 +6,7 @@ tags: SwiftPM
 typora-copy-images-to: ../../Resources/images
 typora-root-url: ../../Resources
 ---
-There are a few great C/C++ libraries out there that you might want to use in your Swift application. Most of the times you'll find a wrapper already, but not all of the times. Or maybe you want something that is carefully tailored to your project needs.
+There are a few great C/C++ libraries out there that you might want to use in your Swift application. Most of the time you'll find a wrapper already, but not all of the times. Or maybe you want something that is carefully tailored to your project needs.
 
 Chris Eidhof from [objc.io](https://www.objc.io) has a wrapper around the cmark library: [CommonMark-Swift](https://github.com/chriseidhof/commonmark-swift). Let's take that as an example and see how this can be achieved.
 
