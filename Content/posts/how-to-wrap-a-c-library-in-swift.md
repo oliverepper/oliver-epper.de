@@ -65,7 +65,7 @@ So we're building two products:
 
 In the target section you can see that Ccmark is the name that we'll use for libcmark. The leading uppercase C seems to be a standard.
 
-For this to work we need to create a directory `Ccmark` below our `Sources`directory and create the file: `module.modulemap`with the following content:
+For this to work we need to create a directory `Ccmark` below our `Sources` directory and create the file: `module.modulemap` with the following content:
 
 ```
 module Ccmark [system] {
@@ -81,7 +81,7 @@ Voila! That's it. We can now use the cmark library in our Swift code.
 
 ## Create a Swift API
 
-Chris created another target: `CommonMark`that gives the user a nicer API to work with. Let's build a minimal version of that.
+Chris created another target: `CommonMark` that gives the user a nicer API to work with. Let's build a minimal version of that.
 
 Edit `Sources/CommonMark/CommonMark.swift` like this:
 
@@ -150,3 +150,16 @@ final class CommonMarkTests: XCTestCase {
 }
 ```
 
+## Include the library with your app
+
+If you want to include the `dylib ` with your app bundle you can create a `Frameworks` subdirectory below `Contents` and copy the library there. You can tell your app where it can find the library with the following command:
+
+```bash
+install_name_tool -change /usr/local/opt/cmark/lib/libcmark.0.29.0.dylib "@executable_path/../Frameworks/libcmark.dylib" ./<YourApp>.app/Contents/MacOS/Scratched
+```
+
+You can find out the the standard path of the library with the following command:
+
+```bash
+otool -L /usr/local/lib/libcmark.dylib
+```
