@@ -6,7 +6,7 @@ tags: macOS, AppKit, NSTextView, SwiftUI
 typora-copy-images-to: ../../Resources/images
 typora-root-url: ../../Resources
 ---
-During WWDC 2020 SwiftUI lerned a few new things. For example Map and TextEditor. Both are neat additions but still not capable of replacing their corresponding AppKit or UIKit counterparts. The SwiftUI Map can handle annotations but not overlays, yet. And the TextEditor cannot present NSAttributedStrings. So let's wrap a NSTextView in SwiftUI and handle the updating of the model data in an efficient way.
+During WWDC 2020 SwiftUI lerned a few new things. For example Map and TextEditor. Both are neat additions but still not capable of replacing their corresponding AppKit or UIKit counterparts. The SwiftUI Map can handle annotations but not overlays, yet. And the TextEditor cannot present NSAttributedStrings. So let's wrap a NSTextView in SwiftUI and handle the updating of the model data.
 
 ## Create a ViewController that presents the NSTextView
 
@@ -124,8 +124,6 @@ struct ContentView: View {
     }
 }
 ```
-
-Try profiling this against the naive approach of just setting the text property on every update and you'll see how much faster this approach is.
 
 Try editing in a long text > 4Mb with and without the SwiftUI `TextEditor`.
 

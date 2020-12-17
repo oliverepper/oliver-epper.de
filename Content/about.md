@@ -2,6 +2,8 @@
 
 My name is **Oliver Epper** and I am a  developer.
 
+Recruiters: [CV – Oliver Epper](/cv)
+
 ## What I do at the moment
 Developing iOS/macOS frameworks and apps in [Swift](https://swift.org).
 
