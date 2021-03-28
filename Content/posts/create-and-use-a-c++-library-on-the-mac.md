@@ -185,7 +185,7 @@ A few words of explanation:
 
 - `-lhello` tells the linker that it should link against `libhello.dylib`
 
-- `-rpath /opt/hello/lib` is the missing puzzle piece. This tells the linker to insert `/opt/hello/lib` into the Macg-O executable as a runtime path. This allows our library to be found. You can inspect the binary with the following command `otool -l hello`:
+- `-rpath /opt/hello/lib` is the missing puzzle piece. This tells the linker to insert `/opt/hello/lib` into the Mach-O executable as a runtime path. This allows our library to be found. You can inspect the binary with the following command `otool -l hello`:
 
 ```pre
 [...]
@@ -208,7 +208,7 @@ HelloService destroyed
 
 - Create a new Xcode project, choose macOS app, SwiftUI for interface and SwiftUI App for lifecycle.
 - Press ⌘-n and begin to type out `Objective-C`. Name the file `HelloServiceWrapper`
-- Accept the automatic creation of the bridging header. If you canceld that you can just create a Header file and name it `<project-name>-bridging-header.h`
+- Accept the automatic creation of the bridging header. If you cancelled that you can just create a Header file and name it `<project-name>-bridging-header.h`
 - Create a Header file and name it `HelloServiceWrapper`
 - Rename `HelloServiceWrapper.m` to `HelloServiceWrapper.mm` 
 
