@@ -6,7 +6,7 @@ tags: macOS, C++, ObjC++, dyld, dylib, CMake
 typora-copy-images-to: ../../Resources/images
 typora-root-url: ../../Resources
 ---
-This took a little while to figure out and is a lot of code to write for a simple hello world program but I learned a few things about macOS along the way.
+This took a little while to figure out. It is a lot of code to write for a simple hello world program, but I learned a few things about macOS along the way.
 
 ## Create the library
 
@@ -118,11 +118,11 @@ You should now see the following output for `tree /opt/hello`:
 
 ```pre
 /opt/hello
-├── include
-│   └── HelloService.hpp
-└── lib
-    ├── libhello.0.0.1.dylib
-    └── libhello.dylib -> libhello.0.0.1.dylib
+  include
+    HelloService.hpp
+  lib
+    libhello.0.0.1.dylib
+    libhello.dylib -> libhello.0.0.1.dylib
 ```
 
 Nice. That looks good. Looks like what we wanted, so far. We have the header in `/opt/hello/include` and the dyamic library in `/opt/hello/lib`. Let's examine the library with `file /opt/hello/lib/libhello.dylib`:
@@ -207,7 +207,7 @@ HelloService destroyed
 ## Create a Swift program that uses the library
 
 - Create a new Xcode project, choose macOS app, SwiftUI for interface and SwiftUI App for lifecycle.
-- Press ⌘-n and begin to type out Objective-C. Name the file `HelloServiceWrapper`
+- Press ⌘-n and begin to type out `Objective-C`. Name the file `HelloServiceWrapper`
 - Accept the automatic creation of the bridging header. If you canceld that you can just create a Header file and name it `<project-name>-bridging-header.h`
 - Create a Header file and name it `HelloServiceWrapper`
 - Rename `HelloServiceWrapper.m` to `HelloServiceWrapper.mm` 
@@ -267,8 +267,8 @@ Remeber the long(-ish) command line for clang that we used to compile the CLI to
 - In build settings add `/opt/hello/include` under _Header Search Paths_, and
 - `/opt/hello/library` under _Library Search Paths_.
 - under _Other Linker Flags_ add
-  - `-rpath /opt/hello/lib`, and
-  - `-lhello'
+  - `-lhello`, and
+  - `-rpath /opt/hello/lib`
 
 Now you should be able to compile the project via ⌘-b.
 
@@ -285,6 +285,54 @@ struct ContentView: View {
 }
 ```
 
-Hit ⌘-r and voila! 😎
+Hit ⌘-r and voila! 😎 Or not?
 
-Now to the fun part.
+Since we have not provided a valid code-signature, yet you need to disable library validation. You can do this under _Hardened Runtime -> Disable Library Validation_.
+
+Now you should be able to start the program. 
+
+## Let's replace the library
+
+Navigate to the place inside `Derived Data` where Xcode has build the binary. The easiest way is to right clock on the App in the Xcode gutter and choose _Show in Finder_. Double click and you should see something like the following:
+
+![Bildschirmfoto 2021-03-28 um 17.42.38](/images/HelloTool.png)
+
+Now edit the library code in `HelloService.cpp` and add something that you can recognise:
+
+```diff
+diff --git a/src/HelloService.cpp b/src/HelloService.cpp
+index 7eeb6ae..74e188a 100644
+--- a/src/HelloService.cpp
++++ b/src/HelloService.cpp
+@@ -24,6 +24,6 @@ const std::string HelloService::getText()
+ {
+     m_count++;
+     std::ostringstream oss;
+-    oss << m_text << " " << m_count;
++    oss << m_text << " called: " << m_count << " times.";
+     return oss.str();
+ }
+```
+
+and recompile and install the library:
+
+```bash
+cd HelloLib/build &&
+make && make install &&
+cd ../..
+```
+
+Without recompiling the app start it again and after you resized it your should see this, now:
+
+![HelloTool2](/images/HelloTool2.png)
+
+Give it another test. Close the window with ⌘-w and open it again from Finder. Now it should read:
+
+> Hallo Welt called: 2 times.
+
+## Next?
+
+What do you want to read next? Two things would be cool to figure out:
+
+1. How to allow for library validation, and
+2. How to build an AppKit app only in C++ (I wouldn't consider doing that, but could be fun anyways).
