@@ -187,14 +187,14 @@ A few words of explanation:
 
 - `-rpath /opt/hello/lib` is the missing puzzle piece. This tells the linker to insert `/opt/hello/lib` into the Macg-O executable as a runtime path. This allows our library to be found. You can inspect the binary with the following command `otool -l hello`:
 
-  ```pre
-  [...]
-  Load command 16
-            cmd LC_RPATH
-        cmdsize 32
-           path /opt/hello/lib (offset 12)
-  [...]
-  ```
+```pre
+[...]
+Load command 16
+        cmd LC_RPATH
+    cmdsize 32
+        path /opt/hello/lib (offset 12)
+[...]
+```
 
 If you run the programm now you should see the following:
 
