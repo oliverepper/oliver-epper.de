@@ -336,3 +336,25 @@ What do you want to read next? Two things would be cool to figure out:
 
 1. How to allow for library validation, and
 2. How to build an AppKit app only in C++ (I wouldn't consider doing that, but could be fun anyways).
+
+## Update
+
+Regarding the missing allowance for library validation. This is how you can codesign directly from CMake. Edit the CMakeLists.txt file:
+
+```diff
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 0d2a499..9e37fc4 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -11,6 +11,8 @@ add_library(hello SHARED src/HelloService.cpp)
+ set_target_properties(hello PROPERTIES VERSION ${PROJECT_VERSION})
+ set_target_properties(hello PROPERTIES PUBLIC_HEADER src/HelloService.hpp)
+ 
++add_custom_command(TARGET hello POST_BUILD COMMAND codesign -s "your_developer_id_application_certificate" $<TARGET_FILE:hello>)
++
+ install(TARGETS hello
+     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+     PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+```
+
+Now you can enable _library validation_ in Xcode.
