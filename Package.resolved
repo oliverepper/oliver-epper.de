@@ -51,17 +51,17 @@
         "repositoryURL": "https://github.com/johnsundell/plot.git",
         "state": {
           "branch": null,
-          "revision": "61e828949ca6f84071bde65c8fc046cf74b7d1a2",
-          "version": "0.8.0"
+          "revision": "c27f6857deeb4c4623db294172a8ec572790a9be",
+          "version": "0.10.0"
         }
       },
       {
         "package": "Publish",
         "repositoryURL": "https://github.com/johnsundell/publish.git",
         "state": {
-          "branch": null,
-          "revision": "9458bacb992f1fde35648fd4bb379fb7335d571c",
-          "version": "0.5.0"
+          "branch": "master",
+          "revision": "9e1b20a23c73ba078966a4fcce23146088d0de63",
+          "version": null
         }
       },
       {
