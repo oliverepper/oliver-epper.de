@@ -365,3 +365,147 @@ cp -a libchuckle.xcframework ChuckleWrapper/lib
 **CAUTION:** I changed a few locations. You can find the project here: [chuckle](https://github.com/oliverepper/chuckle)
 
 Now we got a xframework that we can depend on in a Swift package that can carry an ObjC++-Wrapper to call into out code.
+
+## Build the Swift package
+
+If you checked out the repository you already saw how to setup the swift package. Create a subdirectory `ChuckleWrapper` and run this from within:
+
+```bash
+swift package init
+```
+
+Basically we need this Swift file:
+
+```swift
+@_exported import ObjC
+```
+
+That will depend on the `ObjC` target that has the following files:
+
+#### ObjC/include/ChuckleWrapper.h
+
+```objective-c
+#ifndef ChuckleWrapper_h
+#define ChuckleWrapper_h
+
+#import <Foundation/Foundation.h>
+
+@interface ChuckleWrapper : NSObject
+
++ (NSString *)joke;
+
+@end
+
+#endif /* ChuckleWrapper_h */
+```
+
+and it's implementation
+
+#### ObjC/ChuckleWrapper.mm
+
+```objective-c
+#import "ChuckleWrapper.h"
+#include "chuckle.h"
+
+@implementation ChuckleWrapper
+
++ (NSString *)joke
+{
+    return [NSString stringWithCString:joke().c_str() encoding:[NSString defaultCStringEncoding]];
+}
+
+@end
+```
+
+Here we can include `chuckle.h` because we copied the header file into our xcframework and let the `ObjC` target depend on that via
+
+#### Package.swift
+
+```swift
+// swift-tools-version:5.3
+import PackageDescription
+
+let package = Package(
+    name: "ChuckleWrapper",
+    platforms: [
+        .iOS(.v14),
+        .macOS(.v11)
+    ],
+    products: [
+        .library(
+            name: "ChuckleWrapper",
+            targets: [
+                "libchuckle",
+                "ObjC",
+                "ChuckleWrapper"
+            ]),
+    ],
+    dependencies: [
+    ],
+    targets: [
+        // lib
+        .binaryTarget(
+            name: "libchuckle",
+            path: "lib/libchuckle.xcframework"
+        ),
+
+        // ObjC++ Wrapper
+        .target(
+            name: "ObjC",
+            dependencies: [
+                "libchuckle"
+            ],
+            path: "Sources/ObjC",
+            cxxSettings: [
+                .headerSearchPath("../../lib/libchuckle.xcframework/Headers")
+            ]
+        ),
+
+        .target(
+            name: "ChuckleWrapper",
+            dependencies: [
+                "ObjC"
+            ],
+            path: "Sources/Swift"
+        ),
+
+        .testTarget(
+            name: "ChuckleWrapperTests",
+            dependencies: ["ChuckleWrapper"]),
+    ]
+)
+```
+
+The path to the header files is configured via `cxxSettings` in the `ObjC` target.
+
+Let's test the package
+
+#### ChuckleWrapperTests.swift
+
+```swift
+import XCTest
+@testable import ChuckleWrapper
+
+final class ChuckleWrapperTests: XCTestCase {
+    func testJoke() {
+        guard let joke = ChuckleWrapper.joke() else {
+            XCTFail()
+            return
+        }
+        print("""
+            ---
+            \(joke)
+            ---
+            """)
+        XCTAssertFalse(joke.isEmpty)
+    }
+}
+```
+
+**CAUTION:** Xcode has a really hard time with such a package. If Xcode refuses to compile the package you can either try to compile & run tests form the terminal:
+
+```bash
+swift build && swift test
+```
+
+Or it can help to delete `.swiftpm`
