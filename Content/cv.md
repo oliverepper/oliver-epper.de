@@ -3,15 +3,22 @@
 Interested in remote positions for macOS and iOS.
 
 ## Expertise
-- Darwin-Development (mainly iOS & macOS)
-- Backend Development (Server side Swift - Vapor and/or Python)
-- API and SDK design
+- Darwin-Development (macOS & iOS)
+- Backend Development (Server side Swift, gRPC)
+- API/SDK design
+- Networks & Network Software
+- Software Architecture
+- Swift, ObjC, C/C++
 
 ### Languages
 - German
 - English
 
 ## Experiences
+### 2021 - now
+- macOS Developer at [Starface](https://www.starface.com)
+    - Maintaining & Developing VoIP apps on macOS and iOS
+
 ### 2019 - 2020
 - iOS Lead at Motion-S, responsible for:
     - Creating an iOS SDK capable of automatically recording automotive trips reliably and without any user interaction with the least possible amount of energy consumption. More about the experience here: [Hallo Swift – Folge 42](https://hallo-swift.de/post/042/)

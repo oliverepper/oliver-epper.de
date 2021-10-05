@@ -181,7 +181,7 @@ private extension Node where Context == HTML.BodyContext {
                                         .href(context.sections[section].path),
                                         .text(context.sections[section].title)
                                         )),
-                                    .if(section as! OliverEpper.SectionID == OliverEpper.SectionID.posts,
+                                    .if(section as! OliverEpper.SectionID == OliverEpper.SectionID.apps,
                                         .li(.a(
                                             .href("https://golf.oliver-epper.de"),
                                             .text("Golf")
