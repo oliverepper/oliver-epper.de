@@ -14,11 +14,11 @@ I needed a little tool that could show me which app has registered a certain URL
 - show me a list of all registered URLs and their handlers
 - be able to unregister a handler
 
-Unfortunatley the public API of LaunchServices doesn't help with any of these.
+Unfortunately the public API of LaunchServices doesn't help with any of these.
 
-## The resuce
+## The rescue
 
-Well `lsregister` can unregister apps so it's time to drop it into [Hopper](https://www.hopperapp.com) and start digging around. Often times this is way easier than you think. Drop lsregister into Hopper and search for unregister. You'll find a symbol `_LSUnregisterURL` immediately. If you don't have Hopper available you can use `nm lsregister | grep register`.
+Well, `lsregister` can unregister apps so it's time to drop it into [Hopper](https://www.hopperapp.com) and start digging around. Often times this is way easier than you think. Drop lsregister into Hopper and search for unregister. You'll find a symbol `_LSUnregisterURL` immediately. If you don't have Hopper available you can use `nm lsregister | grep register`.
 
 
 
