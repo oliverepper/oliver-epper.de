@@ -145,3 +145,8 @@ gcc -o demo demo.c
 sudo dmesg
 ./demo "For the fun of it ;)"
 ```
+
+```pre
+[   55.833906] demo called with 'but why?'
+[   71.208406] demo called with 'For the fun of it ;)'
+```
