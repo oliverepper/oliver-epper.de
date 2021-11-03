@@ -22,7 +22,7 @@ This is not my own work, I just searched a little bit on the internet. There is 
 
 First I'd recommend to setup a virtual Debian install. I know there are a bunch of nice distributions out there but I used Debian for a long time so that's what I prefer. Furthermore I need something with good aarch64 support since I'm going to play with this on a Mac.
 
-I tried both Parallels and UTM and for this purpose both should work. You can install UTM via brew: `brew install utm`. Download a Debian installer make the ISO available to the virtual machine. Please use more than 10Gb for the virtual harddrive, you'll need it.
+I tried both Parallels and UTM and for this purpose both should work. You can install UTM via brew: `brew install utm`. Download a Debian installer and make the ISO available to the virtual machine. Please use more than 10GB for the virtual harddrive, you'll need it.
 
 ## Tools
 It is advisable to install the Parallels Tools for better performance if you go with Paralles. You can do that as root with
