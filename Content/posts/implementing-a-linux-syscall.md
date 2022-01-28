@@ -9,7 +9,7 @@ typora-root-url: ../../Resources
 
 ## Why
 
-Honestly, no good reason at all. I am neither a C programmer, nor a kernel hacker. But that said I am curious and this sounds like fun and I get to build a kernel again. Last time must have been 2.something ;)
+Honestly, no good reason at all. I am neither a C programmer, nor a kernel hacker. But that said I am curious and this sounds like fun and I get to build a kernel again. Last time must have been version 2.something ;)
 
 *Spoiler*:
 Moores Law is not true. It took like 20 minutes to build a kernel 20 years ago, and it still takes 20 minutes ;)
