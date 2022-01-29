@@ -61,7 +61,7 @@ func download(url: URL) async throws -> Data {
 }
 ```
 
-Form the delegate functions we need to comminucate back to the thing that we want to return. Roughly like with Futures and Promises.
+From the delegate functions we need to comminucate back to the thing that we want to return. Roughly like with Futures and Promises.
 In the new Swift concurrency system that thing is a `Continuation`.
 
 ```Swift
