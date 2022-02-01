@@ -1,4 +1,4 @@
-`---
+---
 date: 2022-01-31 9:41
 title: Super Simple Example of a Swift Actor
 description: Use an actor to prevent a data race
