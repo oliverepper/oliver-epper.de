@@ -1,4 +1,4 @@
----
+`---
 date: 2022-01-31 9:41
 title: Super Simple Example of a Swift Actor
 description: Use an actor to prevent a data race
@@ -148,7 +148,7 @@ Press again and it will settle with 10. All good, again.
 
 ## Fix it with an actor
 
-Now let's use an actor. Go back to the original Counter but make it an actor.
+Now let's use an actor. Go back to the original `Counter` but make it an actor.
 
 ```Swift
 actor Counter {
@@ -164,11 +164,17 @@ actor Counter {
 }
 ```
 
-The cool things is that you can have the compiler guide you from now on.
+The cool thing is that you can have the compiler guide you from now on. To improve even further on that mark the `counterValue` property in the view model as `@MainActor`.
+
+```Swift
+@MainActor @Published var counterValue: String?
+```
+
+Now build and lets go through the errors.
 
 The first error message is:
 
-> `Actor-isolated instance method 'increment()' can not be referenced from a non-isolated context.`
+> `Actor-isolated instance method 'increment()' can not be referenced from a non-isolated context`
 
 so let's fix that by awaiting the call to `counter.incerement()` from an async context. Change `increment(times:)` to this:
 
@@ -176,35 +182,53 @@ so let's fix that by awaiting the call to `counter.incerement()` from an async c
 func increment(times: Int) {
     Task {
         for _ in 1...times {
-            await self.counter.increment()
+            await counter.increment()
         }
-        self.update() // not done, yet
+        update() // not done, yet
     }
 }
 ```
 
-Do the same for `decrement(times:)` and you'll get to the next error:
+Note that you can drop `self` from `self.counter.increment()`, again. Do the same for `decrement(times:)` and you'll get to the next error:
 
-> `Actor-isolated property 'value' can not be referenced from a non-isolated context.`
+> `Property 'counterValue' isolated to global actor 'MainActor' can not be mutated from this context`
 
-Fix this with annotating the `update()`-function with `@MainActor`.
+Xcode even gives us a code action, now. Press fix for `'Add '@MainActor' to make instance method 'update()' part of global actor 'MainActor'`. Once `update()` is isolated on the MainActor you need to await all calls to it. The reason is that Swift might need to perform a context switch because your code might not be running on the `MainActor` at the time you call `update()`.
 
-Now the error changes to:
+Since `init()` is a normal Swift function and not an async function we need to put the call to `update()` in a Task block:
 
-> `Actor-isolated property 'value' can not be referenced from the main actor.`
+```Swift
+init() {
+    counter = Counter()
+    Task {
+        await update()
+    }
+}
+```
 
-which can be fixed by wrapping the body in a `Task`. The compiler will tell you that you need to await `counter.value.description` now, so do that.
+If I understand everything right an async function has it's own execution stack which can be executed and suspended from an operating system thread. So the last error message:
+
+> `Actor-isolated property 'value' can not be referenced from the main actor`
+
+tells us that the code:
 
 ```Swift
 @MainActor private func update() {
     assert(Thread.isMainThread)
-    Task {
-        counterValue = await counter.value.description
-    }
+    counterValue = counter.value.description
 }
 ```
 
-Do the same for the two calls to the update function inside `increment(times:)` and `decrement(times:)` and inside `init()`. Here's the updated view model:
+has an async execution context (the MainActor) and wants to read a value from another Actor (our Counter Actor). So for this to work we need to send the Counter Actor the message that we want to read its `value` property. This needs to be awaited. So fix the code like this:
+
+```Swift
+@MainActor private func update() async {
+    assert(Thread.isMainThread)
+    counterValue = await counter.value.description
+}
+```
+
+Here's the updated view model:
 
 ```Swift
 final class Model: ObservableObject {
@@ -221,25 +245,24 @@ final class Model: ObservableObject {
     func increment(times: Int) {
         Task {
             for _ in 1...times {
-                await self.counter.increment()
+                await counter.increment()
             }
-            await self.update() // not done, yet
+            await update()
         }
     }
 
     func decrement(times: Int) {
         Task {
             for _ in 1...times {
-                await self.counter.decrement()
+                await counter.decrement()
             }
-            await self.update()
+            await update()
         }
     }
 
-    @MainActor private func update() {
-        Task {
-            counterValue = await counter.value.description
-        }
+    @MainActor private func update() async {
+        assert(Thread.isMainThread)
+        counterValue = await counter.value.description
     }
 }
 ```
