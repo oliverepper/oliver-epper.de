@@ -143,7 +143,7 @@ class Counter {
 }
 ```
 
-The closure returns immediately and after some time (you really have to give it some time) we're getting the desired `5` in the UI again. There's a high chance that there are different values shown before all the operations are performned.
+The closure returns immediately and after some time (you really have to give it some time) we're getting the desired `5` in the UI again. There's a high chance that there are different values shown before all the operations are performed.
 Press again and it will settle with 10. All good, again.
 
 ## Fix it with an actor
