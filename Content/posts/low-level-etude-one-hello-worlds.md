@@ -361,7 +361,7 @@ Add `24` to `0x0000000100003f90` which is `0x0000000100003fa8` and then enter `m
 See! There's your `msg`.
 
 
-*Will update soon...*
+[Part 2](https://oliver-epper.de/posts/low-level-etude-one-hello-worlds-part2/)
 
 ## Links
 
