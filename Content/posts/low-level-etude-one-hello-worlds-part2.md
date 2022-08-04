@@ -287,4 +287,4 @@ After we loaded the address of `msg` into the `x1` register we can save it to ou
 
 You can play with a second variadic parameter and make another symbolic name: `.equ variadic_param_2, 8` or just store the second value to our stack frame using: `str reg, [fp, #8]` instead of `str reg, [fp, #variadic_param_2]`.
 
-*Will update soon*
+[Part 3](https://oliver-epper.de/posts/low-level-etude-one-hello-worlds-part3/)
