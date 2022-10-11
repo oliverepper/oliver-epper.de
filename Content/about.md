@@ -5,11 +5,10 @@ My name is **Oliver Epper** and I am a  developer.
 Recruiters: [CV – Oliver Epper](/cv)
 
 ## What I do at the moment
-Developing iOS/macOS frameworks and apps in [Swift](https://swift.org).
+I code in C, C++, ObjC and Swift for iOS, the Mac and Linux.
 
 ## What I did in the past
-Building backend Software in Java. Running Linux and Unix Servers. Building VPNs.
-Building backends in [Python](https://www.python.org) with [Flask](https://flask.palletsprojects.com).
+Code in various languages. Build backend Software. Run Linux and Unix Servers. Build VPNs.
 
 ## What I also do
 Teach Golf.
