@@ -36,6 +36,13 @@ extension Theme where Site == OliverEpper {
                                     ),
                                     .li(
                                         .a(
+                                            .href("https://chaos.social/@oliep"),
+                                            .target(.blank),
+                                            .span(.class("fab fa-mastodon fa-2x"))
+                                        )
+                                    ),
+                                    .li(
+                                        .a(
                                             .href("https://twitter.com/oliverepper"),
                                             .target(.blank),
                                             .span(.class("fab fa-twitter fa-2x"))
