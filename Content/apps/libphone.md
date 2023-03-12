@@ -11,8 +11,7 @@ typora-root-url: ../../Resources
 
 [libphone.0.0.1-macos-universal.zip](https://oliver-epper.de/libphone.0.0.1-macos-universal.zip)
 
-[libphone.0.0.1-ubuntu22.04-arm.tgz](https://oliver-epper.de/libphone.0.0.1-ubuntu22.04-arm.tgz)
+[libphone.0.0.1-ubuntu22.04-aarch64.tgz](https://oliver-epper.de/libphone.0.0.1-ubuntu22.04-aarch64.tgz)
 
-[libphone.0.0.1-ubuntu22.04-intel.tgz](https://oliver-epper.de/libphone.0.0.1-ubuntu22.04-intel.tgz)
-
+[libphone.0.0.1-ubuntu22.04-x86_64.tgz](https://oliver-epper.de/libphone.0.0.1-ubuntu22.04-x86_64.tgz)
 
