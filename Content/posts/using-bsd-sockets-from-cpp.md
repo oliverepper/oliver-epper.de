@@ -23,7 +23,7 @@ void demo() {
 }
 ```
 
-This is not a good solution, because it's hard to make sure that the free-function is called and called only once. In C++ smart-pointer provides a handle to a memory allocation and thus can guarantee the release of the resource.
+This is not a good solution, because it's hard to make sure that the free-function is called and called only once. In C++ smart-pointers provide a handle to a memory allocation and thus can guarantee the release of the resource.
 
 ## Using a smart-pointer for the out parameter
 
@@ -53,38 +53,44 @@ Since these POSIX functions provide linked-lists it would be very nice to provid
 ### Linked-List-Iterator
 
 ```C++
+#include <cstddef>
+#include <iterator>
+#include <functional>
+
 template <typename T>
-class linked_list_iterator {
-public:
-    using value_type = T;
-    using difference_type = ptrdiff_t;
+struct linked_list_iterator {
+    using value_type        = T;
+    using difference_type   = std::ptrdiff_t;
     using iterator_category = std::forward_iterator_tag;
+    using pointer           = T*;
+    using refernce          = T&;
+    using Next              = std::function<T*(T*)>;
 
-    using pointer = value_type*;
-    using reference = value_type&;
+    explicit linked_list_iterator(T* current, Next next) : m_current{current}, m_next{next} {}
 
-    using Next = std::function<T*(T*)>;
-    Next next = [](T*){ return nullptr; };
-
-    explicit linked_list_iterator() {}
-    explicit linked_list_iterator(T *ptr, Next next) : current{ptr}, next{std::move(next)} {}
-
-    reference operator*() const {
-        return *current;
+    refernce operator*() const {
+        return *m_current;
     }
 
     pointer operator->() const {
-        return &**this;
+        return &(operator*());
     }
 
-    linked_list_iterator& operator++() {
-        if (current)
-            current = next(current);
+    linked_list_iterator operator++() {
+        if (m_current)
+            m_current = m_next(m_current);
         return *this;
     }
 
+    linked_list_iterator operator++(int) {
+        linked_list_iterator temp{*this};
+        if (m_current)
+            m_current = m_next(m_current);
+        return temp;
+    }
+
     bool operator==(const linked_list_iterator& other) const {
-        return current == other.current;
+        return m_current == other.m_current;
     }
 
     bool operator!=(const linked_list_iterator& other) const {
@@ -92,16 +98,16 @@ public:
     }
 
 private:
-    T *current = nullptr;
+    Next m_next;
+    T *m_current = nullptr;
 };
-
 ```
 
 ### Using count_if example
 
 ```C++
 int count_addresses(int family) {
-    auto deleter = [](ifaddrs *ia){ freeifaddrs(ia); };
+    auto deleter = [](ifaddrs *ia) { freeifaddrs(ia); };
     std::unique_ptr<ifaddrs, decltype(deleter)> result;
 
     {
@@ -114,123 +120,52 @@ int count_addresses(int family) {
 
     // use result
     auto begin = linked_list_iterator<ifaddrs>(result.get(), [](ifaddrs *ia) { return ia->ifa_next; });
-    auto end = linked_list_iterator<ifaddrs>(nullptr, begin.next);
+    auto end = linked_list_iterator<ifaddrs>{};
 
-    return std::count_if(begin, end, [family](auto& ia){ return ia.ifa_addr->sa_family == family; });
+    return std::count_if(begin, end, [family](auto &ia) { return ia.ifa_addr->sa_family == family; });
 }
 ```
 
 ## Complete Demo
+
+[Chris Tietze](https://christiantietze.de) made me realize that wrapping things up in a handle class `IfAddrs` makes things even nicer!
+
+### IfAddrs
 ```C++
-#include <cstdlib>
+#include "linked_list_iterator.h"
 #include <ifaddrs.h>
-#include <exception>
-#include <string>
 #include <netdb.h>
-#include <memory>
-#include <functional>
-#include <algorithm>
-#include <iostream>
-#include <ranges>
-#include <arpa/inet.h>
 
-struct error : public std::exception {
-    explicit error(std::string message) : m_message(std::move(message)) {}
+struct IfAddrs {
+    static constexpr auto deleter = [](ifaddrs *ia){ freeifaddrs(ia); };
 
-    [[nodiscard]] const char * what() const noexcept override {
-        return m_message.c_str();
+    explicit IfAddrs() : m_list{nullptr} {
+        ifaddrs *list;
+        int status;
+        if ((status = getifaddrs(&list)) != 0)
+            throw std::runtime_error{gai_strerror(status)};
+
+        m_list.reset(list);
+    }
+
+    linked_list_iterator<ifaddrs> begin() {
+        return linked_list_iterator<ifaddrs>(m_list.get(), [](ifaddrs *ia){ return ia->ifa_next; });
+    }
+
+    linked_list_iterator<ifaddrs> end() {
+        return linked_list_iterator<ifaddrs>(nullptr, nullptr);
     }
 
 private:
-    std::string m_message;
+    std::unique_ptr<ifaddrs, decltype(deleter)> m_list;
 };
 
-template <typename T>
-class linked_list_iterator {
-public:
-    using value_type = T;
-    using difference_type = ptrdiff_t;
-    using iterator_category = std::forward_iterator_tag;
+```
 
-    using pointer = value_type*;
-    using reference = value_type&;
-
-    using Next = std::function<T*(T*)>;
-    Next next = [](T*){ return nullptr; };
-
-    explicit linked_list_iterator() {}
-    explicit linked_list_iterator(T *ptr, Next next) : current{ptr}, next{std::move(next)} {}
-
-    reference operator*() const {
-        return *current;
-    }
-
-    pointer operator->() const {
-        return &**this;
-    }
-
-    linked_list_iterator& operator++() {
-        if (current)
-            current = next(current);
-        return *this;
-    }
-
-    linked_list_iterator operator++(int) {
-        linked_list_iterator tmp{*this};
-        if (current)
-            current = next(current);
-        return tmp;
-    }
-
-    bool operator==(const linked_list_iterator& other) const {
-        return current == other.current;
-    }
-
-    bool operator!=(const linked_list_iterator& other) const {
-        return !(*this == other);
-    }
-
-private:
-    T *current = nullptr;
-};
-
-int count_addresses(int family) {
-    auto deleter = [](ifaddrs *ia){ freeifaddrs(ia); };
-    std::unique_ptr<ifaddrs, decltype(deleter)> result;
-
-    {
-        ifaddrs *temp;
-        int status{0};
-        if ((status = getifaddrs(&temp)) != 0)
-            throw error{gai_strerror(status)};
-        result.reset(temp);
-    }
-
-    // use result
-    auto begin = linked_list_iterator<ifaddrs>(result.get(), [](ifaddrs *ia) { return ia->ifa_next; });
-    auto end = linked_list_iterator<ifaddrs>(nullptr, begin.next);
-
-    return std::count_if(begin, end, [family](auto& ia){ return ia.ifa_addr->sa_family == family; });
-}
-
-std::vector<std::string> addresses(int family) {
-    auto deleter = [](ifaddrs *ia){ freeifaddrs(ia); };
-    std::unique_ptr<ifaddrs, decltype(deleter)> result;
-
-    {
-        ifaddrs *temp;
-        int status{0};
-        if ((status = getifaddrs(&temp)) != 0)
-            throw error{gai_strerror(status)};
-        result.reset(temp);
-    }
-
-    // use result
-    auto begin = linked_list_iterator<ifaddrs>(result.get(), [](ifaddrs *ia) { return ia->ifa_next; });
-    auto end = linked_list_iterator<ifaddrs>(nullptr, begin.next);
-
-
-    const auto convert = [](ifaddrs& ia) {
+### main
+```C++
+auto main() -> int {
+    const auto convert = [](ifaddrs &ia) {
         switch (ia.ifa_addr->sa_family) {
             case AF_INET: {
                 auto address = reinterpret_cast<sockaddr_in *>(ia.ifa_addr);
@@ -250,25 +185,13 @@ std::vector<std::string> addresses(int family) {
         }
     };
 
-    auto rng = std::ranges::subrange(begin, end)
-    | std::views::filter([family](const auto& ia){ return ia.ifa_addr->sa_family == family; })
-    | std::views::transform([convert](auto& ia) { return convert(ia); });
+    auto ips = std::views::all(IfAddrs{})
+               | std::views::filter([](const auto& ia){ return ia.ifa_addr->sa_family == AF_INET6; })
+               | std::views::transform([&convert](auto& ia){ return convert(ia); });
 
-    std::vector<std::string> ips;
-    std::transform(rng.begin(), rng.end(), std::back_inserter(ips), std::identity());
-    return ips;
-}
-
-auto main() -> int {
-    std::cout << "ether addresses: " << count_addresses(AF_LINK) << "\n";
-    std::cout << "ipv4 addresses: " << count_addresses(AF_INET) << "\n";
-    std::cout << "ipv6 addresses: " << count_addresses(AF_INET6) << std::endl;
-
-    for (const auto& address : addresses(AF_INET6))
-        std::cout << address << std::endl;
+    for (const auto& ip : ips)
+        std::cout << ip << std::endl;
 
     return EXIT_SUCCESS;
 }
 ```
-
-
