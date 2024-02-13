@@ -7,20 +7,20 @@ typora-copy-images-to: ../../Resources/images
 typora-root-url: ../../Resources
 ---
 
-I've been using TrueNAS Core for a few years, now. I am about to switch to a TrueNAS Scale VM on Proxmox. TrueNAS will still have real hardware access to the disk controller and reuse the old disks. To be well prepared I wanted to have some practice with ZFS on my Mac. During that practice I got hooked. This is what time machine tried to be! And it has a much superior UI – one that is scriptable by nature.
+I've been using TrueNAS Core for a few years now. I am about to switch to a TrueNAS Scale VM on Proxmox. TrueNAS will still have real hardware access to the disk controller and reuse the old disks. To be well prepared I wanted to have some practice with ZFS on my Mac. During that practice, I got hooked. This is what Time Machine tried to be! And it has a much superior UI – one that is scriptable by nature.
 
 ## Installation
  I installed OpenZFS via brew and allowed the loading of the required kext. You need to change the security policy of your system for this. Boot into recovery mode start `Startup Security Utility` and change `Full Security` to `Allow user management of kernel extensions from identified developers`.
- After you restart you can verify that the OpenZFS kext is loaded via the following command: `kextstat | grep -v com.apple`. This will list all kernel extensions whose names do not begin with 'com.apple'.
+ After you restart, you can verify that the OpenZFS kext is loaded via the following command: `kextstat | grep -v com.apple`. This will list all kernel extensions whose names do not begin with 'com.apple'.
 
 ## The Playground
-I guess you don't have a bunch of high performing disks lying around and even if you had, I'd hope you'd be to lazy to connect them. Let's build four disks from files:
+I guess you don't have a bunch of high performing disks lying around and even if you had, I'd hope you'd be too lazy to connect them. Let's build four disks from files:
 
 ```bash
 mkfile 1G a-disk b-disk c-disk d-disk
 ```
 
-You could use these files immediately as ZFS `vdev`s, but follow me and attach them via hdiutil to you Mac. It's easier to simulate failing hardware that way. Let's attach the first three for now.
+You could use these files immediately as ZFS `vdev`s, but follow me and attach them via hdiutil to your Mac. It's easier to simulate failing hardware that way. Let's attach the first three for now.
 
 ```bash
 hdiutil attach -imagekey diskimage-class=CRawDiskImage -nomount $(pwd)/a-disk
@@ -30,15 +30,15 @@ hdiutil attach -imagekey diskimage-class=CRawDiskImage -nomount $(pwd)/c-disk
 
 On my system that gave me `/dev/disk6`, `/dev/disk7`, `/dev/disk8`.
 
-## ZFS Pools & Filesystems
+## ZFS Pools & File systems
 
-Lets build a ZFS pool on `disk6`:
+Let's build a ZFS pool on `disk6`:
 
 ```bash
 sudo zpool create tank /dev/disk6
 ```
 
-Now we have a ZFS pool called tank AND a ZFS filesystem called tank which is the root filesystem of that pool. Lets create another filesystem for our experiements:
+Now we have a ZFS pool called tank AND a ZFS file system called tank which is the root file system of that pool. Let's create another file system for our experiments:
 
 ```bash
 sudo zfs create tank/oliver
@@ -50,17 +50,17 @@ and gives permission to the local user `oliver`:
 sudo chown oliver: /Volumes/tank/oliver
 ```
 
-Now the user `oliver` can create, modify and delete files and directories in that filesystem.
+Now the user `oliver` can create, modify and delete files and directories in that file system.
 
 ## Snapshots and Sending
 
-Lets use `disk7` and `disk8` to create a mirror that we use for backups:
+Let's use `disk7` and `disk8` to create a mirror that we use for backups:
 
 ```bash
 sudo zpool create backup mirror /dev/disk7 /dev/disk8
 ```
 
-Voila. `sudo zpool status` should now look like this:
+Voilà. `sudo zpool status` should now look like this:
 
 ```pre
   pool: backup
@@ -86,7 +86,7 @@ config:
 errors: No known data errors
 ```
 
-Let's touch a file on `/Volumes/tank/oliver` and than take a snapshot of the filesystem
+Let's touch a file on `/Volumes/tank/oliver` and then take a snapshot of the file system
 
 ```bash
 touch /Volumes/tank/oliver/Init
@@ -106,9 +106,9 @@ Now let's create a backup:
 sudo zfs send tank/oliver@1 | sudo zfs recv backup/oliver
 ```
 
-That's it. There is a filesystem `backup/oliver`, now that contains the file `Init`.
+That's it. There is a file system `backup/oliver` now that contains the file `Init`.
 
-## Sending Icremental Snapshots
+## Sending Incremental Snapshots
 
 Let's touch another file on `tank/oliver` and then take another snapshot:
 
@@ -127,13 +127,13 @@ We used different options, here. See me man pages for `zfs-send` and `zfs-recv`
 
 ## Make the backup safer
 
-Lets make our backup even safer:
+Let's make our backup even safer:
 
 ```bash
 sudo zfs set copies=2 backup/oliver
 ```
 
-This tells the filesystem `backup/oliver` to hold two copies of my precious data. How cool is that?
+This tells the file system `backup/oliver` to hold two copies of my precious data. How cool is that?
 
 ## Make the backup smaller
 
@@ -143,7 +143,7 @@ sudo zfs set compression=gzip backup/oliver
 
 ## Make the backup even more useful
 
-Lets delete the files on `tank/oliver` and safe a new snapshot to the backup:
+Let's delete the files on `tank/oliver` and safe a new snapshot to the backup:
 
 ```bash
 rm /Volumes/tank/oliver/*
@@ -151,13 +151,15 @@ sudo zfs snapshot tank/oliver@3
 sudo zfs send -RI @2 tank/oliver@3 | sudo zfs recv -Fu backup/oliver
 ```
 
-Lets make the all of our snapshots visible for the filesystem `backup/oliver`:
+Let's make all of our snapshots visible to the file system `backup/oliver`:
 
 ```bash
 sudo zfs set snapdir=visible backup/oliver
 ```
 
 Now open `/Volumes/backup/oliver` in Finder and press `Cmd` + `Shift` + `.` to make dot-files visible and navigate to `.zfs/snapshot/oliver@2` and you have read-only access to your deleted files.
+
+![zfs-snapshots](/images/zfs-snapshots.png)
 
 ## Simulate a disk-failure
 
@@ -238,9 +240,9 @@ config:
 errors: No known data errors
 ```
 
-`disk10` will become something like `media-xxxx` when you export and the import the pool `backup`.
+`disk10` will become something like `media-xxxx` when you export and import the pool `backup`.
 
 
 ## Addendum
 
-Just for reference. If you want to see the mapping between gptids and classic device names on FreeBSD use `glabel status`. In MacOS this is shown by `diskutil list` or `diskutil info`. `diskutil info /dev/disk7s1` shows `0BC56ABF-50C7-AF4C-BC93-86D958969282` which matches the media-id of the first disk in the pool `backup`.
+Just for reference. If you want to see the mapping between gptids and classic device names on FreeBSD use `glabel status`. In macOS this is shown by `diskutil list` or `diskutil info`. `diskutil info /dev/disk7s1` shows `0BC56ABF-50C7-AF4C-BC93-86D958969282` which matches the media-id of the first disk in the pool `backup`.
