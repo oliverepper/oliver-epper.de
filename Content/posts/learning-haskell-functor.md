@@ -7,11 +7,11 @@ typora-copy-images-to: ../../Resources/images
 typora-root-url: ../../Resources
 ---
 
-_Disclaimer: This content comes straight out of the fantastic book [Effective Haskell](https://effective-haskell.com) written by [Rebecca Skinner](https://rebeccaskinner.net). I was only talking notes and doing my own little experiments. Original Haskell content by me will follow shortly._
+_Disclaimer: This content comes out of the fantastic book [Effective Haskell](https://effective-haskell.com) written by [Rebecca Skinner](https://rebeccaskinner.net). I was only talking notes and doing my own little experiments. Original Haskell content by me will follow shortly._
 
 I am learning Haskell and I am having great fun with it. My goal is to be able to apply [Denotational Design](https://www.typetheoryforall.com/episodes/denotational-design) as described by [Conal Elliott](http://conal.net) to the software I build and learning Haskell gives me a better understanding of the fundamentals, through practice.
 
-I believe that the programming language you work in influences the way you thing and so I make a real effort to be fluent in multiple languages with different paradigms.
+I believe that the programming language you work in influences the way you think, so I make a real effort to be fluent in multiple languages with different paradigms.
 
 # Functor
 For the mathematical definition of functor see [Wikipedia](https://en.wikipedia.org/wiki/Functor#Definition).
@@ -77,9 +77,9 @@ show <.> MyList 1 Empty         -- MyList "1" Empty
 ```
 
 ## Maybe
-Let's build another structure that can implement the Functor typeclass. I will use German words for the type name and the constructors because just like `List Maybe` already is an instance of `Functor` and although we will implement `MyFunctor` I think it makes it clearer:
+Let's build another structure that can implement the Functor typeclass. I will use German words for the type name and the constructors because, just as `List` and `Maybe` are already instances of `Functor`, and although we will implement `MyFunctor`, I think this approach makes it clearer:
 
-```
+```haskell
 data Vielleicht a = Nix | Ein a deriving Show
 
 instance MyFunctor Vielleicht where
@@ -87,12 +87,12 @@ instance MyFunctor Vielleicht where
   myFMap f (Ein a) = Ein (f a)
 ```
 
-Since `MyList` and `Vielleicht` are of the same kind: `* -> *` that means both taking one parameter to construct a type this was pretty mechanic. Nothing new, here.
+Since `MyList` and `Vielleicht` are of the same kind: `* -> *` that means both taking one parameter to construct a type this was pretty mechanic. Nothing new.
 
 ## Either
 I am using German words again to build an `Either` type that has the kind: `* -> * -> *`. This means the type constructor will need two parameters to construct a type.
 
-```
+```haskell
 data Entweder a b = Links a | Rechts b deriving show
 ```
 
@@ -117,7 +117,7 @@ instance MyFunctor (Entweder a) where
 
 Let's try it out:
 
-```
+```haskell
 round <.> teile 5 2     -- Rechts 2
 ```
 

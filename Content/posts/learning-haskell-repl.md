@@ -99,14 +99,14 @@ handleUnknownCommandException ioAction = do
         Right continue ->
             return continue
 
-loop' :: IO Bool -> IO ()
-loop' ioAction =
+loop :: IO Bool -> IO ()
+loop ioAction =
     ioAction >>= \continue ->
-        if continue then loop' ioAction
+        if continue then loop ioAction
         else return ()
 
 repl :: IO ()
-repl = loop' $ handleUnknownCommandException $ getCommand "$" >>= handleCommand
+repl = loop $ handleUnknownCommandException $ getCommand "$" >>= handleCommand
 ```
 
 This is not necessarily the way you would want to do it. I wanted getCommand to throw an exception and I wanted a clear separation between the elements that form the REPL. I have just started learning Haskell so suggestions are very welcome.
